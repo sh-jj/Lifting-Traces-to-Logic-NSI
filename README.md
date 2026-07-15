@@ -1,15 +1,7 @@
-# NSI: ALFWorld and TextCraft source release
+# Lifting Traces to Logic: Programmatic Skill Induction with Neuro-Symbolic Learning for Long-Horizon Agentic Tasks (ICML'26)
 
-This directory contains the public source implementation of
-**Neuro-Symbolic Induction (NSI)**.
+This directory contains the public source implementation of **Neuro-Symbolic Induction (NSI)**.
 
-## Method name
-
-The method released here is **NSI**. Use this name in papers, reports, issues,
-and derived work. Some internal module names, class attributes, and generated
-trial-directory prefixes still contain `nsms` for backward compatibility with
-the research code. Those identifiers refer to the NSI implementation; **NSMS is
-not a second method or an alternative public name**.
 
 ## Release scope
 
@@ -202,6 +194,14 @@ python run_textcraft.py \
 
 Online products are generated locally under each trial's
 `online_evolved/` directory.
+
+## Method name
+
+The method released here is **NSI**. Use this name in papers, reports, issues,
+and derived work. Some internal module names, class attributes, and generated
+trial-directory prefixes still contain `nsms` for backward compatibility with
+the research code. Those identifiers refer to the NSI implementation; **NSMS is
+not a second method or an alternative public name**.
 
 ## Reproducibility notes
 
