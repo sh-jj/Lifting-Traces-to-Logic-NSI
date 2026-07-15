@@ -1,0 +1,21 @@
+Crafting commands:
+craft 3 dark oak sign using 6 dark oak planks, 1 stick
+craft 4 dark oak planks using 1 dark oak log
+craft 1 stick using 1 planks
+craft 4 stick using 2 bamboo
+craft 4 oak planks using 1 oak log
+craft 1 dark oak fence using 2 stick, 4 dark oak planks
+craft 1 warped stairs using 6 warped planks
+craft 3 oak sign using 6 oak planks, 1 stick
+
+obs: Your task is to: fetch 2 dark oak logs.
+think: I should check my inventory first, to see if I already have dark oak sign. Otherwise, I will directly try to get it from the environment.
+obs: OK.
+inventory
+obs: Inventory: [stick] (1)
+get 2 dark oak logs.
+obs: Got 2 dark oak logs
+inventory
+obs: Inventory: [dark oak log] (2) [stick] (1)
+think: I have 2 dark oak logs in my inventory. Task Completed!
+obs: OK.

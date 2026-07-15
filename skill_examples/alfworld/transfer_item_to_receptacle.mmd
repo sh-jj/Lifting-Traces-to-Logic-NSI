@@ -1,0 +1,87 @@
+%%{init: {'theme': 'default', 'themeVariables': {'background': '#ffffff'} } }%%
+flowchart TD
+    %% ===================== Class Definitions =====================
+    %% Guideline: Strictly follow the class definitions.
+    classDef Spec fill:#f4f4ff,stroke:#6a6ab2,stroke-dasharray: 4 3,stroke-width:2px;
+    classDef Interface fill:#e2e2f2,stroke:#6a6ab2,stroke-width:2px;
+    classDef LoopControl fill:#f9e4b7,stroke:#b99b37,stroke-width:2px;
+    classDef PrimitiveAction fill:#f9c2c2,stroke:#c23737,stroke-width:2px;
+    classDef Check fill:#d0e1f9,stroke:#4378a2,stroke-width:2px;
+    classDef DataOp fill:#f0f0f0,stroke:#888888,stroke-width:2px;
+
+    %% ===================== Type Alias Legend =====================
+    %% Guideline: Strictly follow the type alias legend.
+    LEGEND["Type Legend:<br>ReceptacleName := str<br>ItemName := str<br>ObjectType := str<br>ReceptacleType := str<br>Bool := bool<br>List_T := sequence of T<br>Optional_T := T or None"]:::Spec
+    
+    %% ===================== Spec =====================
+    %% Guideline: Strictly follow the Spec.
+    FLOW_SPEC{{"Spec: <br>Flow Spec<br>inputs: {{ITEMNAME_INPUT: ItemName, TOREC_INPUT: ReceptacleName}}<br>outputs: {{SUCCESS_FLAG: Bool}}"}}:::Spec
+
+    %% ===================== Interface & Spec =====================
+    %% Guideline: START is entry; *_END are exits. No computations here. Line breaks use <br>. 
+    %% Guideline: Strictly follow the interface definition.
+    START(["Interface: <br> Inputs: <br>ITEMNAME_INPUT: ItemName<br>TOREC_INPUT: ReceptacleName"]):::Interface
+    SUCCESS_END(["Interface: <br> Return: <br>SUCCESS_FLAG: Bool:=True<br>writes GLOBAL: (SUCCESS_FLAG: Bool:=True)"]):::Interface
+    FAILURE_END(["Interface: <br> Return: <br>SUCCESS_FLAG: Bool:=False<br>writes GLOBAL: (SUCCESS_FLAG: Bool:=False)"]):::Interface
+
+    %% ===================== Primitive Actions =====================
+  
+    %% Guideline: Here are more allowed PrimitiveActions Nodes. 
+    %% Guideline: Select the PrimitiveActions Nodes that workflow needs. Remove any nodes that are not needed. 
+    %% Note that any revision on the setting of the PrimitiveActions Nodes is STRICTLY FORBIDDEN. Directly copy which node the workflow needs. 
+    %% Guideline: When needed, instantiate multiple PrimitiveAction nodes by assigning unique IDs (e.g., A_OPEN_1, A_OPEN_2); each node id is a separate instance that can connect to different successors.
+    A_GOTO["PrimitiveAction: <br>(action: 'go to {{goto_rec}}')<br>local in: (goto_rec: ReceptacleName = {{TOREC}})<br>out: (executed: Bool)"]:::PrimitiveAction
+    A_OPEN["PrimitiveAction: <br>(action: 'open {{open_rec}}')<br>local in: (open_rec: ReceptacleName = {{TOREC}})<br>out: (executed: Bool)"]:::PrimitiveAction
+    A_MOVE["PrimitiveAction: <br>(action: 'move {{move_item}} to {{to_rec}}')<br>local in: (move_item: ItemName = {{ITEMNAME}}, to_rec: ReceptacleName = {{TOREC}})<br>out: (executed: Bool)"]:::PrimitiveAction
+
+    %% ===================== LoopControl (use only if needed) =====================
+    %% Guideline: Only foreach loops via LoopControl with edges 'body' and 'done'.
+    %% Guideline: LoopControl nodes only operate on the loop variable (e.g., LOOP_FOR_LOCATIONS["LoopControl: <br>For receptacle_i in {{loop_receptacles}}<br>writes GLOBAL: (CURRENT_RECEPTACLE: ReceptacleName:=receptacle_i)<br>local in: (loop_receptacles: List_ReceptacleName = {{RECEPTACLE_CANDIDATES}})"]:::LoopControl, assign the global `CURRENT_RECEPTACLE` with local `receptacle_i` from the local `loop_receptacles` if global variable `RECEPTACLE_CANDIDATES` could be provided from the previous nodes).
+    %% Guideline: Inside every node, operate only on variables declared in that node's `local in`; first bind any needed GLOBAL to a local there.
+    %% Guideline: Revise the GLOBAL parameter assignment in the `local in` so each local reads from a global already produced in the workflow; treat the shown globals as examples, not fixed inputs.
+    %% Guideline: When needed, create multiple LoopControl nodes with distinct IDs (e.g., LOOP_FOR_1, LOOP_FOR_2) to represent separate loop sites.
+
+    %% ===================== Checks =====================
+    %% Guideline: Checks branch on Yes/No only; inputs resolved from GLOBALS. 
+    %% Guideline: Modify the check condition to improve workflow if needed.
+    %% Guideline: Inside every node, operate only on variables declared in that node's `local in`; first bind any needed GLOBAL to a local there.
+    %% Guideline: Revise the GLOBAL parameter assignment in the `local in` so each local reads from a global already produced in the workflow; treat the shown globals as examples, not fixed inputs.
+    %% Guideline: Check nodes cannot contain any GLOBAL writes. 
+    %% Guideline: When needed, duplicate Check nodes with unique IDs (e.g., C_IS_CLOSED_1, C_IS_CLOSED_2) to use the same predicate at different decision points.
+
+    C_IS_CLOSED["Check: <br>is_closed({{rec_name_to_check}})<br>local in: (rec_name_to_check: ReceptacleName = {{TOREC}})"]:::Check
+    C_LOCATE["Check: <br>locate({{rec_name_to_check}})<br>local in: (rec_name_to_check: ReceptacleName = {{TOREC}})"]:::Check
+
+    %% ===================== Data Operation =====================
+    %% Guideline: All GLOBAL writes and data-binding happen in DataOp nodes. 
+    %% Guideline: Strictly copy the provided D_INIT node below. 
+    D_INIT["DataOp: <br>writes GLOBAL: (ITEMNAME: ItemName:={{itemname_init}}<br>TOREC: ReceptacleName:={{torec_init}}<br>SUCCESS_FLAG: Bool:= False)<br>local in: (itemname_init: ItemName = {{ITEMNAME_INPUT}}, torec_init: ReceptacleName = {{TOREC_INPUT}})"]:::DataOp
+
+    %% ===================== Node Class Assignments =====================
+    %% Guideline: Assign each node to a class (e.g., `PrimitiveAction`, `Check`, `DataOp`, `LoopControl`) based on its role.
+
+    class START,SUCCESS_END,FAILURE_END Interface
+    class A_GOTO,A_OPEN,A_MOVE PrimitiveAction
+    class C_IS_CLOSED,C_LOCATE Check
+
+    %% ===================== Legend links =====================
+    %% Guideline: Strictly follow the legend links.
+    START -.- FLOW_SPEC
+    START -.- LEGEND
+
+    %% ===================== Control-Flow Edges =====================
+    %% Guideline: Keep edges control-only (no parameters); label branches with Yes/No/body/done.
+    %% Guideline: Improve the control-flow edges if needed. 
+    %% Guideline: Ensure every referenced global is assigned earlier in the workflow or provided by START before the consuming node runs.
+    %% Guideline: Prepare required globals (with same type) before any PrimitiveAction node that reads from them. 
+    %% Guideline: For outgoing edges, LoopControl nodes must have both `body` and `done`; Check nodes must have `Yes` and `No`; DataOp/PrimitiveAction nodes must emit exactly one edge.
+
+    START --> D_INIT
+    D_INIT --> C_LOCATE
+    C_LOCATE -->|No| A_GOTO
+    C_LOCATE -->|Yes| C_IS_CLOSED
+    A_GOTO --> C_IS_CLOSED
+    C_IS_CLOSED -->|Yes| A_OPEN
+    C_IS_CLOSED -->|No| A_MOVE
+    A_OPEN --> A_MOVE
+    A_MOVE --> SUCCESS_END

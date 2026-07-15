@@ -1,0 +1,51 @@
+obs: You are in the middle of a room. Looking quickly around you, you see a cabinet 9, a cabinet 8, a cabinet 7, a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 9, a drawer 8, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1. Your task is to: put a cool mug in shelf.
+> think: To solve the task, I need to find and take a mug, then cool it with fridge, then move it in shelf.
+obs: OK.
+> think: First I need to find a mug. A mug is more likely to appear in countertop (1-3), coffeemachine (1), cabinet (1-9), shelf (1-3), drawer (1-9). I can check one by one, starting with countertop 1.
+obs: OK.
+> go to countertop 1
+obs: On the countertop 1, you see a knife 1, a pan 2, a pan 1, and a plate 1.
+> go to countertop 2
+obs: On the countertop 2, you see a apple 2, a butterknife 2, a fork 3, a houseplant 1, a knife 2, a lettuce 3, a spatula 1, and a winebottle 1.
+> go to countertop 3
+obs: On the countertop 3, you see a apple 1, a book 1, a bread 1, a butterknife 3, a glassbottle 2, a glassbottle 1, a knife 3, a lettuce 2, a lettuce 1, a papertowelroll 1, a plate 3, a spoon 1, a statue 1, and a vase 2.
+> go to coffeemachine 1
+obs: On the coffeemachine 1, you see nothing.
+> go to cabinet 1
+obs: The cabinet 1 is closed.
+> open cabinet 1
+obs: You open the cabinet 1. The cabinet 1 is open. In it, you see nothing.
+> go to cabinet 2
+obs: The cabinet 2 is closed.
+> open cabinet 2
+obs: You open the cabinet 2. The cabinet 2 is open. In it, you see nothing.
+> go to cabinet 3
+obs: The cabinet 3 is closed.
+> open cabinet 3
+obs: You open the cabinet 3. The cabinet 3 is open. In it, you see a pot 1.
+> go to cabinet 4
+obs: On the cabinet 4, you see nothing.
+> go to cabinet 5
+obs: The cabinet 5 is closed.
+> open cabinet 5
+obs: You open the cabinet 5. The cabinet 5 is open. In it, you see nothing.
+> go to cabinet 6
+obs: The cabinet 6 is closed.
+> open cabinet 6
+obs: You open the cabinet 6. The cabinet 6 is open. In it, you see a mug 3.
+> think: Now I find a mug (3). Next, I need to take it.
+obs: OK.
+> take mug 3 from cabinet 6
+obs: You pick up the mug 3 from the cabinet 6.
+> think: Now I take a mug (3). Next, I need to go to a fridge (1) and cool it.
+obs: OK.
+> go to fridge 1
+obs: The fridge 1 is closed.
+> cool mug 3 with fridge 1
+obs: You cool the mug 3 using the fridge 1.
+> think: Now I cool the mug. Next, I need to move it to shelf 1.
+obs: OK.
+> go to shelf 1
+obs: On the shelf 1, you see a cup 2, a cup 1, a peppershaker 1, and a saltshaker 1.
+> move mug 3 to shelf 1
+obs: You put the mug 3 in/on the shelf 1.

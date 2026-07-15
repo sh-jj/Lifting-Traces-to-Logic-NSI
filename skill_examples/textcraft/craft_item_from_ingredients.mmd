@@ -1,0 +1,60 @@
+%%{init: {'theme': 'default', 'themeVariables': {'background': '#ffffff'} } }%%
+flowchart TD
+    %% ===================== Class Definitions =====================
+    classDef Spec fill:#f4f4ff,stroke:#6a6ab2,stroke-dasharray: 4 3,stroke-width:2px;
+    classDef Interface fill:#e2e2f2,stroke:#6a6ab2,stroke-width:2px;
+    classDef LoopControl fill:#f9e4b7,stroke:#b99b37,stroke-width:2px;
+    classDef PrimitiveAction fill:#f9c2c2,stroke:#c23737,stroke-width:2px;
+    classDef Check fill:#d0e1f9,stroke:#4378a2,stroke-width:2px;
+    classDef DataOp fill:#f0f0f0,stroke:#888888,stroke-width:2px;
+
+    %% ===================== Type Alias Legend =====================
+    LEGEND["Type Legend:<br>ItemName := str<br>Count := int<br>Bool := bool<br>List_ItemName := sequence of ItemName<br>List_Count := sequence of Count"]:::Spec
+    
+    %% ===================== Spec =====================
+    FLOW_SPEC{{"Spec: <br>Flow Spec<br>inputs: {{TARGET_ITEM_INPUT: ItemName, NEED_COUNT_INPUT: Count, INGREDIENTS_INPUT: List_ItemName, INGREDIENTS_COUNT_INPUT: List_Count}}<br>outputs: {{SUCCESS_FLAG: Bool}}"}}:::Spec
+
+    %% ===================== Interface & Spec =====================
+    START(["Interface: <br> Inputs: <br>TARGET_ITEM_INPUT: ItemName<br>NEED_COUNT_INPUT: Count<br>INGREDIENTS_INPUT: List_ItemName<br>INGREDIENTS_COUNT_INPUT: List_Count"]):::Interface
+    SUCCESS_END(["Interface: <br> Return: <br>SUCCESS_FLAG: Bool:=True<br>writes GLOBAL: (SUCCESS_FLAG: Bool:=True)"]):::Interface
+    FAILURE_END(["Interface: <br> Return: <br>SUCCESS_FLAG: Bool:=False<br>writes GLOBAL: (SUCCESS_FLAG: Bool:=False)"]):::Interface
+
+    %% ===================== Primitive Actions =====================
+    A_INVENTORY["PrimitiveAction: <br>(action: 'inventory')<br>out: (executed: Bool)"]:::PrimitiveAction
+    A_CRAFT["PrimitiveAction: <br>(action: 'craft {{action_item_count}} {{action_item_name}} using {{action_ingredients_count_list}} {{action_ingredients_name_list}}')<br>local in: (action_item_name: ItemName = {{TARGET_ITEM}}, action_item_count: Count = {{COUNT_TO_CRAFT}}, action_ingredients_name_list: List_ItemName = {{INGREDIENTS}}, action_ingredients_count_list: List_Count = {{INGREDIENTS_COUNT}})<br>out: (executed: Bool)"]:::PrimitiveAction  
+
+    %% ===================== LoopControl (use only if needed) =====================
+    LOOP_FOR_INGREDIENTS["LoopControl: <br>For idx, ingredient_i in enumerate({{loop_ingredients}})<br>writes GLOBAL: (CURRENT_INGREDIENT: ItemName:=ingredient_i, LOOP_INDEX: Count:=idx)<br>local in: (loop_ingredients: List_ItemName = {{INGREDIENTS}})"]:::LoopControl
+
+    %% ===================== Checks =====================
+    C_INGREDIENT_READY["Check: <br> (inventory({{check_ingredient_name}}, {{check_available_ingredient_count}}) and {{check_available_ingredient_count}} >= {{check_target_count}})<br>local in: (check_ingredient_name: ItemName = {{CURRENT_INGREDIENT}}, check_target_count: Count = {{TARGET_COUNT}}, check_available_ingredient_count: Count = {{AVAILABLE_COUNT}})"]:::Check
+    
+    %% ===================== Data Operation =====================
+    D_INIT["DataOp: <br>writes GLOBAL: (TARGET_ITEM: ItemName:={{target_item_init}}<br>NEED_COUNT: Count:={{need_count_init}}<br>INGREDIENTS: List_ItemName:={{ingredients_init}}<br>INGREDIENTS_COUNT: List_Count:={{ingredients_count_init}}<br>SUCCESS_FLAG: Bool:= False)<br>local in: (target_item_init: ItemName = {{TARGET_ITEM_INPUT}}, need_count_init: Count = {{NEED_COUNT_INPUT}}, ingredients_init: List_ItemName = {{INGREDIENTS_INPUT}}, ingredients_count_init: List_Count = {{INGREDIENTS_COUNT_INPUT}})"]:::DataOp
+    D_SELECT_TARGET_COUNT["DataOp: <br>writes GLOBAL: (TARGET_COUNT: Count = select_list_index({{local_counts_list}}, {{local_index_arg}}))<br>local in: (local_counts_list: List_Count = {{INGREDIENTS_COUNT}}, local_index_arg: Count = {{LOOP_INDEX}})"]:::DataOp
+    D_FETCH_AVAILABLE["DataOp: <br>writes GLOBAL: (AVAILABLE_COUNT: Count = current_count_of_item({{local_fetch_ingredient_name}})) <br>local in: (local_fetch_ingredient_name: ItemName = {{CURRENT_INGREDIENT}})"]:::DataOp
+    D_SET_COUNT_TO_CRAFT["DataOp: <br>writes GLOBAL: (COUNT_TO_CRAFT: Count = {{local_need_count}})<br>local in: (local_need_count: Count = {{NEED_COUNT}})"]:::DataOp
+    
+    %% ===================== Node Class Assignments =====================
+    class START,SUCCESS_END,FAILURE_END Interface
+    class A_INVENTORY,A_CRAFT PrimitiveAction
+    class D_INIT,D_SET_COUNT_TO_CRAFT,D_SELECT_TARGET_COUNT,D_FETCH_AVAILABLE DataOp
+    class LOOP_FOR_INGREDIENTS LoopControl
+    class C_INGREDIENT_READY Check
+
+    %% ===================== Legend links =====================
+    START -.- FLOW_SPEC
+    START -.- LEGEND
+
+    %% ===================== Control-Flow Edges =====================
+    START --> D_INIT
+    D_INIT -->|Start_Loop| LOOP_FOR_INGREDIENTS
+    LOOP_FOR_INGREDIENTS -->|body| D_SELECT_TARGET_COUNT
+    D_SELECT_TARGET_COUNT --> D_FETCH_AVAILABLE
+    D_FETCH_AVAILABLE --> C_INGREDIENT_READY
+    C_INGREDIENT_READY -->|Yes, Continue_Loop| LOOP_FOR_INGREDIENTS
+    C_INGREDIENT_READY -->|No| FAILURE_END
+    LOOP_FOR_INGREDIENTS -->|done| D_SET_COUNT_TO_CRAFT
+    D_SET_COUNT_TO_CRAFT --> A_CRAFT
+    A_CRAFT --> A_INVENTORY
+    A_INVENTORY --> SUCCESS_END

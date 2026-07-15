@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nesy-workflow-release"
+version = "0.1.0"
+description = "Source implementation of NSI pipelines for ALFWorld and TextCraft"
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dynamic = ["dependencies"]
+
+[project.scripts]
+nesy-alfworld = "run_alfworld:main"
+nesy-textcraft = "run_textcraft:main"
+
+[tool.setuptools]
+py-modules = ["run_alfworld", "run_textcraft", "runner_utils"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "alfworld_runs*",
+  "textcraft_runs*",
+  "common*",
+  "concepts*",
+  "skill_examples*",
+  "third_party*",
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.package-data]
+alfworld_runs = [
+  "base_config.yaml",
+  "grounding_examples/*/*.txt",
+]
+textcraft_runs = [
+  "examples/*.txt",
+]
+skill_examples = [
+  "README.md",
+  "**/*.mmd",
+]
+third_party = [
+  "concepts/LICENSE",
+]

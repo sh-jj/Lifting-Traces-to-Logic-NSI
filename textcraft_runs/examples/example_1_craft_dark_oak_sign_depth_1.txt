@@ -1,0 +1,29 @@
+Crafting commands:
+craft 3 dark oak sign using 6 dark oak planks, 1 stick
+craft 4 dark oak planks using 1 dark oak log
+craft 1 stick using 1 planks
+craft 4 stick using 2 bamboo
+craft 4 oak planks using 1 oak log
+craft 1 dark oak fence using 2 stick, 4 dark oak planks
+craft 1 warped stairs using 6 warped planks
+craft 3 oak sign using 6 oak planks, 1 stick
+
+obs: Your task is to: craft dark oak sign. 
+think: I should check if I can fetch dark oak sign directly from the environment or the inventory.
+obs: OK.
+inventory 
+obs: Inventory: [stick] (1) [dark oak planks] (6)
+get 1 dark oak sign
+obs: Could not find dark oak sign
+think: I cannot get dark oak sign directly, I need to craft it. From the crafting commands, I can use: craft dark oak sign using 6 dark oak planks, 1 stick. Ingredients needed: 6 dark oak planks, 1 stick. Input assumption: I have all the neccessary ingredients in my inventory. Let me verify this first.
+obs: OK.
+inventory
+obs: Inventory: [stick] (1) [dark oak planks] (6)
+think: I found my ingredients: 6 dark oak planks, 1 stick in my inventory. My assumption is true, I can proceed. I will use the crafting command: craft dark oak sign using 6 dark oak planks
+obs: OK.
+craft 3 dark oak sign using 6 dark oak planks, 1 stick
+obs: Crafted 3 minecraft:dark_oak_sign
+inventory 
+obs: Inventory: [dark oak sign] (3)
+think: I now have dark oak sign in my inventory. Task Completed!
+obs: OK.
